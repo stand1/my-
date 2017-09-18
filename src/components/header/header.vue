@@ -29,15 +29,15 @@
         <div class="background">
             <img :src="seller.avatar" width="100%" height="100%" alt="">
         </div>
-        <div v-show="detailShow" class="detail">
+        <div v-show="detailShow" class="detail">a
             <div class="detail-wapper clearfix">
                 <div class="detail-main">
                     <h1 class="name">{{seller.name}}</h1>
-                    <star :size="48" :score="seller.score"></star>
+                    <star :size="36" :score="2.5"></star>
                 </div>
             </div>
-            <div class="detail-close">
-                <i class="icon-close" @cilck="hildDetail"></i>
+            <div class="detail-close" @cilck="hldeDetail">
+                <i class="icon-close"></i>
             </div>
         </div>
     </div>
@@ -60,7 +60,7 @@
       showDetail () {
         this.detailShow = true;
       },
-      hildDetail () {
+      hldeDetail () {
         this.detailShow = false;
       }
     },
