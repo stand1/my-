@@ -29,14 +29,35 @@
         <div class="background">
             <img :src="seller.avatar" width="100%" height="100%" alt="">
         </div>
-        <div v-show="detailShow" class="detail">a
+        <div v-show="detailShow" class="detail">
             <div class="detail-wapper clearfix">
                 <div class="detail-main">
                     <h1 class="name">{{seller.name}}</h1>
-                    <star :size="36" :score="2.5"></star>
+                    <div class="star-wapper">
+                        <star :size="48" :score="seller.score"></star>
+                    </div>
+                    <div class="title">
+                        <div class="line"></div>
+                        <div class="text">优惠信息</div>
+                        <div class="line"></div>
+                    </div>
+                    <ul v-if="seller.supports" class="supports">
+                        <li v-for="(item,$index) in seller.supports" class="support-item">
+                            <span class="icon" :class="classMap[seller.supports[$index].type]"></span>
+                            <span class="text">{{seller.supports[$index].description}}</span>
+                        </li>
+                    </ul>
+                    <div class="title">
+                        <div class="line"></div>
+                        <div class="text">商家公告</div>
+                        <div class="line"></div>
+                    </div>
+                    <div class="bulletin">
+                        <span class="content">{{seller.bulletin}}</span>
+                    </div>
                 </div>
             </div>
-            <div class="detail-close" @cilck="hldeDetail">
+            <div class="detail-close" @click="hideDetail">
                 <i class="icon-close"></i>
             </div>
         </div>
@@ -60,7 +81,7 @@
       showDetail () {
         this.detailShow = true;
       },
-      hldeDetail () {
+      hideDetail () {
         this.detailShow = false;
       }
     },
@@ -216,6 +237,61 @@
             font-weight :700
             line-height :18px
             text-align :center
+          .star-wapper
+            text-align :center
+            margin-top: 16px
+            padding :2px 0
+          .title
+            width :80%
+            display :flex
+            margin :28px auto 24px
+            .line
+              flex :1
+              position :relative
+              top :-6px
+              border-bottom :1px solid rgba(255,255,255,0.2)
+            .text
+              font-size :14px
+              padding :0px 12px
+              font-weight :700
+          .supports
+            width :80%
+            margin :0 auto
+            .support-item
+              padding: 0 12px
+              margin-bottom: 12px
+              font-size :0
+              &.last-chid
+                margin-bottom :0
+              .icon
+                display :inline-block
+                vertical-align :top
+                width :12px
+                height :12px
+                margin-right :4px
+                background-size 12px 12px
+                background-repeat :no-repeat
+                &.decrease
+                    bg-image('decrease_2')
+                &.discount
+                    bg-image('discount_2')
+                &.guarantee
+                    bg-image('guarantee_2')
+                &.invoice
+                    bg-image('invoice_2')
+                &.special
+                    bg-image('special_2')
+              .text
+                font-size :12px
+                line-height :12px
+          .bulletin
+            width 80%
+            margin :0 auto
+            .content
+              font-size 12px
+              font-weight :200
+              line-height :24px
+              padding :0 12px
       .detail-close
         position :relative
         width :32px

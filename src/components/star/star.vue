@@ -10,8 +10,8 @@
   const CLS_HALF = 'half';
   const CLS_OFF = 'off';
 
-  export default{
-    porps: {
+  export default {
+    props: {
       size: {
         type: Number
       },
@@ -25,6 +25,7 @@
         return 'star-' + this.size;
       },
       itemClasses () {
+        console.log(this.score);
         let result = [];
         let score = Math.floor(this.score * 2) / 2;
         let hasDecimal = score % 1 !== 0;
