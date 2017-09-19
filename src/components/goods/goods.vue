@@ -2,7 +2,7 @@
   <div class="goods">
     <div class="menu-wrapper" ref="menuWrapper">
       <ul>
-        <li v-for="item in goods" class="menu-item">
+        <li v-for="(item, $index) in goods" class="menu-item" :class="{ current: currentIndex === $index }" @click="sellerMeun($index, $event)">
           <span class="text border-1px">
             <span v-show="item.type > 0" class="icon" :class="classMap[item.type]"></span>{{item.name}}
           </span>
@@ -27,17 +27,23 @@
                 <div class="price">
                   <span class="now">￥{{food.price}}</span><span v-show="food.oldPrice" class="old">￥{{food.oldPrice}}</span>
                 </div>
+                <div class="cartcontrol-wrapper">
+                  <cartcontrol :food="food"></cartcontrol>
+                </div>
               </div>
             </li>
           </ul>
         </li>
       </ul>
     </div>
+    <shopcart :sellct-foods="sellctFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
   </div>
 </template>
 
 <script>
   import BScroll from '../../../node_modules/better-scroll';
+  import shopcart from '../shopcart/shopcart.vue';
+  import cartcontrol from '../cartcontrol/cartcontrol.vue';
   const ERR_OK = 0;
   export default{
     props: {
@@ -52,8 +58,32 @@
         scrollY: 0
       };
     },
+    computed: {
+      currentIndex () {
+        for (let i = 0; i < this.listHeight.length; i++) {
+          let height1 = this.listHeight[i];
+          let height2 = this.listHeight[i + 1];
+          if (!height2 || (this.scrollY >= height1 && this.scrollY < height2)) {
+            return i;
+          }
+        }
+        return 0;
+      },
+      sellctFoods () {
+        let foods = [];
+        this.goods.forEach((good) => {
+          good.foods.forEach((food) => {
+            if (food.count) {
+              foods.push(food);
+            }
+          });
+        });
+        return foods;
+      }
+    },
     created () {
       this.classMap = ['decrease', 'discount', 'guarantee', 'invoice', 'special'];
+//      通过ajax请求到数据
       this.$http.get('/api/goods').then((response) => {
         response = response.body;
         if (response.errno === ERR_OK) {
@@ -65,23 +95,39 @@
         }
       });
     },
+//    右侧联动效果
     methods: {
-      _initBscroll () {
-        this.menuScroll = new BScroll(this.$refs.menuWrapper, {});
-        this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {});
+      sellerMeun (index, event) {
+        if (!event._constructed) {
+          return;
+        }
+        let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook');
+        let el = foodList[index];
+        this.foodsScroll.scrollToElement(el, 300);
       },
+//      操作dom树
+      _initBscroll () {
+        this.menuScroll = new BScroll(this.$refs.menuWrapper, {click: true});
+        this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {click: true, probeType: 3});
+        this.foodsScroll.on('scroll', (pos) => {
+          this.scrollY = Math.abs(Math.round(pos.y));
+        });
+      },
+//      获取每个版块的高度将其push到数据中
       _calculateHeight () {
         let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook');
-        console.log(foodList);
         let $height = 0;
         this.listHeight.push($height);
         for (let i = 0; i < foodList.length; i++) {
           let item = foodList[i];
           $height += item.clientHeight;
           this.listHeight.push($height);
-          console.log(this.listHeight);
         }
       }
+    },
+    components: {
+      shopcart,
+      cartcontrol
     }
   };
 </script>
@@ -105,6 +151,14 @@
          width :56px
          line-height :14px
          padding :0 12px
+         &.current
+           position :relative
+           z-index :10
+           margin-top :-1px
+           background-color :#fff
+           .text
+             border-none()
+             font-weight :700
          .icon
            display :inline-block
            vertical-align :top
@@ -179,4 +233,8 @@
                text-decoration :line-through
                font-size :10px
                color :rgb(147,153,159)
+           .cartcontrol-wrapper
+             position :absolute
+             right :0
+             bottom :12px
 </style>
