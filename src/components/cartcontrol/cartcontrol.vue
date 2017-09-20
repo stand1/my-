@@ -12,6 +12,7 @@
 
 <script>
   import Vue from 'vue';
+  import bus from '../../common/js/eventBus.js';
   export default{
     props: {
       food: {
@@ -28,6 +29,7 @@
         } else {
           this.food.count++;
         }
+        bus.$emit('cart.add', event.target);
       },
       removeCart (event) {
         if (!event._constructed) {
@@ -48,7 +50,7 @@
       display :inline-block
       padding :6px
       transition :all 0.4s linear
-      &.move-transition
+      &.move-transition-active
         opacity :1
         transform :tanslate3D(0,0,0)
       .inner
@@ -58,7 +60,7 @@
         color :rgb(0, 160, 220)
         transition :all 0.4s liner
         transform :rotate(0)
-      &.move-enter, &.move-leave
+      &.move-enter-active, &.move-leave-active
         opacity :0
         transform :tanslate3D(24px, 0, 0)
         .inner
