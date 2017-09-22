@@ -2,11 +2,11 @@
  * Created by Administrator on 2017/9/18 0018.
  */
 export function formatDate (date, fmt) {
-  console.log(fmt);
-  console.log(date);
+  // console.log(fmt);
+  // console.log(date);
   if (/(y+)/.test(fmt)) {
     fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length));
-    console.log(fmt);
+    // console.log(fmt);
   }
   let o = {
     'M+': date.getMonth() + 1,
@@ -21,7 +21,7 @@ export function formatDate (date, fmt) {
       fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? str : pad(str));
     }
   }
-  console.log(fmt);
+  // console.log(fmt);
   return fmt;
 }
 

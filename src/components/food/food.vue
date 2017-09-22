@@ -105,7 +105,6 @@
           this.onlyContent = true;
           this.$nextTick(() => {
            if (!this.scroll) {
-             console.log(this.food.ratings);
              this.scroll = new BScroll(this.$refs.food, {
                click: true
              });

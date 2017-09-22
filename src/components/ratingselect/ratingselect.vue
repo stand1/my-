@@ -116,6 +116,5 @@
         font-size:12px
       &.on
        .icon-check_circle
-        color:green
-
+        color:#00c850
 </style>
