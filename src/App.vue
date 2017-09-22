@@ -20,15 +20,21 @@
 
 <script>
     import header from '@/components/header/header.vue';
+    import {urlParse} from '@/common/js/url.js';
     const ERR_OK = 0;
     export default {
       data () {
         return {
-            seller: {}
+            seller: {
+              id: (() => {
+                let queryParam = urlParse();
+                return queryParam.id;
+              })()
+            }
         };
       },
       created () {
-        this.$http.get('/api/seller').then(
+        this.$http.get('/api/seller?id=' + this.seller.id).then(
           (response) => {
             response = response.body;
             if (response.errno === ERR_OK) {
