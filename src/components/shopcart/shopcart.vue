@@ -18,6 +18,7 @@
         </div>
           <div class="ball-container">
             <div v-for="ball in balls" v-show="ball.show" class="ball">
+                <!--<transition name="drop" @before-enter="beforDrop" @enter="dropping" @after-enter="afterDrop"><transition>-->
                 <div class="inner inner-hook"></div>
             </div>
         </div>
@@ -181,7 +182,7 @@
     },
     transitions: {
       drop: {
-        beforeEnter (el) {
+        beforDrop (el) {
           let count = this.balls.length;
           while (count--) {
             let ball = this.balls[count];
@@ -198,7 +199,7 @@
             }
           }
         },
-        enter (el) {
+        droppping (el, done) {
           /* eslint-disable no-unused-vars */
           let rf = el.offsetHeight;
           this.$nextTick(() => {
@@ -207,9 +208,10 @@
             let inner = el.getElementsByClassName('inner-hook')[0];
             inner.style.webkitTransform = 'translate3d{0,0,0}';
             inner.style.transform = 'translate3d{0,0,0}';
+            el.addEventListener('transitionend', done);
           });
         },
-        afterEnter (el) {
+        afterDrop (el) {
           let ball = this.dropBalls.shift();
           if (ball) {
             ball.show = false;
